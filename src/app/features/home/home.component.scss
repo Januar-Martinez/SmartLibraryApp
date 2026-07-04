@@ -1,0 +1,98 @@
+$primary:    #9CB080;
+$dark:       #273338;
+$text-muted: #666;
+
+.hero {
+  background: $dark;
+  color: #fff;
+  padding: 4rem 8%;
+  margin-top: 2rem;
+
+  h1 {
+    font-size: 2rem;
+    margin-bottom: 0.75rem;
+  }
+
+  p {
+    color: #aaa;
+    font-size: 1.1rem;
+  }
+}
+
+.stat-card {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+
+  i {
+    font-size: 1.5rem;
+    color: $primary;
+  }
+
+  .stat-value {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: $dark;
+  }
+
+  .stat-label {
+    font-size: 0.85rem;
+    color: $text-muted;
+    text-align: center;
+  }
+}
+
+.quick-access {
+  padding: 2rem 8%;
+
+  h2 {
+    color: $dark;
+    margin-bottom: 1.5rem;
+  }
+}
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.card {
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 1.5rem;
+  text-decoration: none;
+  color: $dark;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+
+  i {
+    font-size: 1.5rem;
+    color: $primary;
+  }
+
+  h3 { margin: 0; }
+
+  p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: $text-muted;
+  }
+
+  &:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    border-color: $primary;
+  }
+}

@@ -1,0 +1,15 @@
+<nav class="navbar">
+
+  <div class="navbar-brand">
+    <a routerLink="/">
+      <img src="favicon.ico" alt="Logo" />
+    </a>
+  </div>
+
+  <ul class="navbar-menu">
+    @for (item of menuItems; track item.label) {
+      <app-menu-item [item]="item" />
+    }
+  </ul>
+
+</nav>

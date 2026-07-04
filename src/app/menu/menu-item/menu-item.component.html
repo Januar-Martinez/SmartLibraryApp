@@ -1,0 +1,11 @@
+@switch (item.type) {
+  @case ('normal') {
+    <li
+      class="menu-item"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: item.link === '/' }"
+    >
+      <a [routerLink]="item.link">{{ item.label }}</a>
+    </li>
+  }
+}

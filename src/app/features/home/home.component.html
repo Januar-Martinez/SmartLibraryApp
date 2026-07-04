@@ -1,0 +1,23 @@
+<div class="home">
+
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Sistema de Gestión de Libros</h1>
+      <p>Administra libros, miembros y préstamos de forma rápida y organizada.</p>
+    </div>
+  </section>
+  
+  <section class="quick-access">
+    <h2>Acceso rápido</h2>
+    <div class="cards-grid">
+      @for (card of quickAccess; track card.link) {
+        <a [routerLink]="card.link" class="card">
+          <i [class]="card.icon"></i>
+          <h3>{{ card.label }}</h3>
+          <p>{{ card.description }}</p>
+        </a>
+      }
+    </div>
+  </section>
+
+</div>
