@@ -1,0 +1,91 @@
+<div class="table-wrapper">
+  <div class="table-scroll">
+    <table class="gt-table">
+      <thead>
+        <tr>
+          @for (col of columns; track col.label) {
+            <th class="sortable" (click)="onSort(col.accessor)">
+              <div class="th-content">
+                <span>{{ col.label }}</span>
+              </div>
+
+              @if (col.filterable !== false && col.type !== 'actions') {
+                <div class="th-filter" (click)="$event.stopPropagation()">
+                  @if (col.type === 'boolean') {
+                    <select (change)="onFilterChange(col.accessor!, $any($event.target).value)">
+                      <option value="">Todos</option>
+
+                      <option value="true">
+                        {{ asBoolean(col).trueLabel ?? 'Sí' }}
+                      </option>
+
+                      <option value="false">
+                        {{ asBoolean(col).falseLabel ?? 'No' }}
+                      </option>
+                    </select>
+                  } @else {
+                    <input
+                      type="text"
+                      placeholder="Buscar..."
+                      (input)="onFilterChange(col.accessor!, $any($event.target).value)"
+                    />
+                  }
+                </div>
+              }
+            </th>
+          }
+        </tr>
+      </thead>
+
+      <tbody>
+        @for (row of pagedData(); track $index) {
+          <tr>
+            @for (col of columns; track col.label) {
+              <td>
+                @if (col.type === 'text') {
+                  {{ row[col.accessor!] }}
+                }
+
+                @if (col.type === 'monetary') {
+                  {{ formatMonetary(row[col.accessor!], asMonetary(col)) }}
+                }
+
+                @if (col.type === 'boolean') {
+                  {{ formatBoolean(row[col.accessor!], asBoolean(col)) }}
+                }
+
+                @if (col.type === 'actions') {
+                  <div class="actions-cell">
+                    @for (a of asActions(col).actions; track a.icon) {
+                      <button class="action-btn" (click)="a.onClick(row)">
+                        <i [class]="a.icon"></i>
+                      </button>
+                    }
+                  </div>
+                }
+              </td>
+            }
+          </tr>
+        } @empty {
+          <tr>
+            <td [attr.colspan]="columns.length" class="empty-row">Sin datos</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pagination">
+    <div>
+      <button (click)="goToPage(currentPage() - 1)">‹</button>
+      <span>{{ currentPage() + 1 }} / {{ totalPages() }}</span>
+      <button (click)="goToPage(currentPage() + 1)">›</button>
+    </div>
+
+    <select (change)="onPageSizeChange(+$any($event.target).value)">
+      @for (size of pageSizeOptions; track size) {
+        <option [value]="size">{{ size }}</option>
+      }
+    </select>
+  </div>
+</div>

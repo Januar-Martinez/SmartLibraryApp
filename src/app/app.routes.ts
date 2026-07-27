@@ -5,12 +5,12 @@ export const routes: Routes = [
     path: '',
     loadComponent: () => import('./features/home/home.component').then((m) => m.HomeComponent),
   },
-  /*{
-    path: 'guests',
-    loadComponent: () =>
-      import('./features/guests/guests.component').then((m) => m.GuestsComponent),
-  },
   {
+    path: 'members',
+    loadComponent: () =>
+      import('./features/members/members.component').then((m) => m.MembersComponent),
+  },
+  /*{
     path: 'rooms',
     loadComponent: () => import('./features/rooms/rooms.component').then((m) => m.RoomsComponent),
   },

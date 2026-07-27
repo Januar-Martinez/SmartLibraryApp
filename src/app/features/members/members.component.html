@@ -1,0 +1,68 @@
+<div class="accordion">
+  <div class="accordion-header" (click)="toggleForm()">
+    <span>Agregar Miembro</span>
+
+    <span class="arrow" [class.open]="isExpanded"> ▼ </span>
+  </div>
+
+  @if (isExpanded) {
+    <form class="accordion-body" [formGroup]="form" (ngSubmit)="save()">
+      <div class="row">
+        <div class="form-group">
+          <label>Nombre</label>
+          <input type="text" formControlName="name" />
+          @if (form.controls.name.touched && form.controls.name.invalid) {
+            <small>El nombre es obligatorio.</small>
+          }
+        </div>
+
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" formControlName="email" />
+          @if (form.controls.email.touched && form.controls.email.invalid) {
+            <small>Ingrese un correo válido.</small>
+          }
+        </div>
+      </div>
+
+      <div class="actions">
+        <div class="server-message">
+          <span
+            class="message"
+            [class.success]="messageType === 'success'"
+            [class.error]="messageType === 'error'"
+          >
+            {{ message }}
+          </span>
+        </div>
+
+        <button class="btn-save" type="submit">Guardar</button>
+      </div>
+    </form>
+  }
+</div>
+<div>
+  
+  @if (isLoading) {
+    <div class="state-msg"><i class="fa-solid fa-spinner fa-spin"></i> Cargando...</div>
+  }
+
+  @if (errorMsg) {
+    <div class="state-msg error">
+      <i class="fa-solid fa-triangle-exclamation"></i> {{ errorMsg }}
+    </div>
+  }
+
+  @if (!isLoading && !errorMsg) {
+    <app-table [columns]="columns" [data]="members" />
+  }
+
+  <app-modal
+    #modal
+    [config]="modalConfig"
+    [editData]="selectedMember"
+    [apiError]="apiError"
+    (save)="onSave($event)"
+    (close)="onModalClose()"
+  />
+</div>

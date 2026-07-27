@@ -1,0 +1,91 @@
+@if (isOpen) {
+  <div class="modal-overlay" (click)="closeModal()"></div>
+
+  <div class="modal-container" role="dialog" [attr.aria-label]="config.title">
+    <div class="modal-header">
+      <h5>{{ config.title }}</h5>
+      <button class="close-btn" (click)="closeModal()" aria-label="Cerrar">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      @for (field of config.fields; track field.key) {
+        @if (isFieldVisible(field)) {
+          <div class="field-group" [class.has-error]="errors[field.key]">
+            <div class="input-row">
+              @if (field.icon) {
+                <span class="field-icon">
+                  <i [class]="field.icon"></i>
+                </span>
+              }
+
+              @if (field.type === 'text') {
+                <input
+                  type="text"
+                  [placeholder]="field.label"
+                  [(ngModel)]="formData[field.key]"
+                  (input)="onTextInput(field, $event)"
+                />
+              }
+
+              @if (field.type === 'number') {
+                <input
+                  type="number"
+                  [placeholder]="field.label"
+                  [min]="$any(field).min"
+                  [max]="$any(field).max"
+                  [(ngModel)]="formData[field.key]"
+                />
+              }
+
+              @if (field.type === 'date') {
+                <input type="date" [(ngModel)]="formData[field.key]" />
+              }
+
+              @if (field.type === 'select') {
+                <select [(ngModel)]="formData[field.key]">
+                  @for (opt of asSelect(field).options; track opt.value) {
+                    <option [ngValue]="opt.value">
+                      {{ opt.label }}
+                    </option>
+                  }
+                </select>
+              }
+
+              @if (field.type === 'boolean') {
+                <select [(ngModel)]="formData[field.key]">
+                  <option [ngValue]="true">
+                    {{ $any(field).trueLabel ?? 'Activo' }}
+                  </option>
+
+                  <option [ngValue]="false">
+                    {{ $any(field).falseLabel ?? 'Inactivo' }}
+                  </option>
+                </select>
+              }
+            </div>
+
+            @if (errors[field.key]) {
+              <span class="error-msg">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                {{ errors[field.key] }}
+              </span>
+            }
+          </div>
+        }
+      }
+    </div>
+
+    @if (apiError) {
+      <div class="api-error"><i class="fa-solid fa-triangle-exclamation"></i> {{ apiError }}</div>
+    }
+
+    <div class="modal-footer">
+      <button class="btn-save" (click)="onSave()">
+        <i class="fa-solid fa-floppy-disk"></i> Guardar
+      </button>
+      <button class="btn-cancel" (click)="closeModal()">Cancelar</button>
+    </div>
+  </div>
+}
