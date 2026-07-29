@@ -1,5 +1,5 @@
-import { Member } from './../../models/member.model';
-import { MemberService } from './../../services/member.service';
+import { BookService } from './../../services/book.service';
+import { Book } from './../../models/book.model';
 import { ChangeDetectorRef, Component, OnInit, ViewChild, inject } from '@angular/core';
 import { ReactiveFormsModule, NonNullableFormBuilder, Validators } from '@angular/forms';
 import { TableComponent } from '../../shared/table/table.component';
@@ -10,22 +10,22 @@ import { getApiError } from '../../core/api-error.util';
 import { firstValueFrom } from 'rxjs';
 
 @Component({
-  selector: 'app-members',
+  selector: 'app-books',
   standalone: true,
   imports: [ReactiveFormsModule, TableComponent, ModalComponent],
-  templateUrl: './members.component.html',
-  styleUrl: './members.component.scss',
+  templateUrl: './books.component.html',
+  styleUrl: './books.component.scss',
 })
-export class MembersComponent implements OnInit {
+export class BooksComponent implements OnInit {
   private fb = inject(NonNullableFormBuilder);
-  private memberService = inject(MemberService);
+  private bookService = inject(BookService);
   private cdr = inject(ChangeDetectorRef);
   apiError = '';
 
   @ViewChild('modal') modal!: ModalComponent;
 
-  members: Member[] = [];
-  selectedMember: Member | null = null;
+  books: Book[] = [];
+  selectedBook: Book | null = null;
   isLoading = false;
   errorMsg = '';
 
@@ -35,8 +35,9 @@ export class MembersComponent implements OnInit {
   isExpanded = false;
 
   form = this.fb.group({
-    name: ['', Validators.required],
-    email: ['', [Validators.required, Validators.email]],
+    title: ['', Validators.required],
+    author: ['', Validators.required],
+    stock: [0, Validators.required],
   });
 
   toggleForm() {
@@ -53,16 +54,16 @@ export class MembersComponent implements OnInit {
     }
 
     try {
-      await firstValueFrom(this.memberService.create(this.form.getRawValue()));
+      await firstValueFrom(this.bookService.create(this.form.getRawValue()));
 
-      this.message = 'Miembro registrado correctamente.';
+      this.message = 'Libro registrado correctamente.';
       this.messageType = 'success';
       this.cdr.detectChanges();
 
       this.form.reset();
-      this.loadMembers();
+      this.loadBooks();
     } catch (err) {
-      this.message = getApiError(err, 'No fue posible registrar el miembro.');
+      this.message = getApiError(err, 'No fue posible registrar el libro.');
       this.messageType = 'error';
       this.cdr.detectChanges();
     }
@@ -70,9 +71,9 @@ export class MembersComponent implements OnInit {
 
   columns: TableColumn[] = [
     { type: 'text', label: 'ID', accessor: 'id' },
-    { type: 'text', label: 'Miembro', accessor: 'name' },
-    { type: 'text', label: 'Email', accessor: 'email' },
-    { type: 'boolean', label: 'Activo', accessor: 'isActive' },
+    { type: 'text', label: 'Titulo', accessor: 'title' },
+    { type: 'text', label: 'Autor', accessor: 'author' },
+    { type: 'text', label: 'Stock', accessor: 'stock' },
     {
       type: 'actions',
       label: 'actualizar',
@@ -80,15 +81,15 @@ export class MembersComponent implements OnInit {
         {
           icon: 'fa-solid fa-pencil',
           tooltip: 'Actualizar',
-          onClick: (row: Member) => this.openModal(row),
+          onClick: (row: Book) => this.openModal(row),
         },
       ],
     },
   ];
 
   modalConfig: ModalConfig = {
-    modalId: 'memberModal',
-    title: 'Editar Miembro',
+    modalId: 'bookModal',
+    title: 'Editar Libro',
     fields: [
       {
         type: 'text',
@@ -99,42 +100,44 @@ export class MembersComponent implements OnInit {
       },
       {
         type: 'text',
-        key: 'name',
-        label: 'Nombre',
-        icon: 'fa-solid fa-user',
+        key: 'title',
+        label: 'Título',
+        icon: 'fa-solid fa-book',
         required: true,
       },
       {
         type: 'text',
-        key: 'email',
-        label: 'Email',
-        icon: 'fa-solid fa-envelope',
+        key: 'author',
+        label: 'Autor',
+        icon: 'fa-solid fa-user-pen',
         required: true,
       },
       {
-        key: 'isActive',
-        type: 'boolean',
-        label: 'Estado',
+        type: 'number',
+        key: 'stock',
+        label: 'Stock',
+        icon: 'fa-solid fa-boxes-stacked',
+        required: true,
       },
     ],
   };
 
   ngOnInit(): void {
-    this.loadMembers();
+    this.loadBooks();
   }
 
-  loadMembers(): void {
+  loadBooks(): void {
     this.isLoading = true;
     this.errorMsg = '';
 
-    this.memberService.getAll().subscribe({
+    this.bookService.getAll().subscribe({
       next: (data) => {
-        this.members = data;
+        this.books = data;
         this.isLoading = false;
         this.cdr.detectChanges();
       },
       error: (err) => {
-        this.errorMsg = 'Error al cargar los miembros.';
+        this.errorMsg = 'Error al cargar los libros.';
         this.isLoading = false;
         this.cdr.detectChanges();
         console.error(err);
@@ -142,27 +145,27 @@ export class MembersComponent implements OnInit {
     });
   }
 
-  openModal(member: Member): void {
-    this.selectedMember = member;
+  openModal(book: Book): void {
+    this.selectedBook = book;
     this.modal.open();
   }
 
   onModalClose(): void {
-    this.selectedMember = null;
+    this.selectedBook = null;
     this.apiError = '';
   }
 
-  onSave(formData: Member): void {
+  onSave(formData: Book): void {
     const { id, ...dto } = formData;
 
-    this.memberService.update(id, dto).subscribe({
+    this.bookService.update(id, dto).subscribe({
       next: () => {
         this.apiError = '';
         this.modal.closeModal();
-        this.loadMembers();
+        this.loadBooks();
       },
       error: (err) => {
-        this.apiError = getApiError(err, 'Error al actualizar el miembro.');
+        this.apiError = getApiError(err, 'Error al actualizar el libro.');
       },
     });
   }

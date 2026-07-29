@@ -10,17 +10,17 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./features/members/members.component').then((m) => m.MembersComponent),
   },
-  /*{
-    path: 'rooms',
-    loadComponent: () => import('./features/rooms/rooms.component').then((m) => m.RoomsComponent),
-  },
   {
+    path: 'books',
+    loadComponent: () => import('./features/books/books.component').then((m) => m.BooksComponent),
+  },
+  /*{
     path: 'reservations',
     loadComponent: () =>
       import('./features/reservations/reservations.component').then((m) => m.ReservationsComponent),
-  },
+  },*/
   {
     path: '**',
     redirectTo: '',
-  },*/
+  },
 ];
