@@ -14,11 +14,10 @@ export const routes: Routes = [
     path: 'books',
     loadComponent: () => import('./features/books/books.component').then((m) => m.BooksComponent),
   },
-  /*{
-    path: 'reservations',
-    loadComponent: () =>
-      import('./features/reservations/reservations.component').then((m) => m.ReservationsComponent),
-  },*/
+  {
+    path: 'loans',
+    loadComponent: () => import('./features/loans/loans.component').then((m) => m.LoansComponent),
+  },
   {
     path: '**',
     redirectTo: '',

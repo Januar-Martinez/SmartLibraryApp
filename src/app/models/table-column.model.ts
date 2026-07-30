@@ -1,4 +1,4 @@
-export type ColumnType = 'text' | 'monetary' | 'boolean' | 'actions';
+export type ColumnType = 'text' | 'monetary' | 'boolean' | 'actions' | 'date';
 
 interface BaseColumn {
   type: ColumnType;
@@ -35,7 +35,13 @@ export interface ActionsColumn extends BaseColumn {
 export interface ActionButton<T> {
   icon: string;
   tooltip?: string;
+  disabled?:(row:T)=>boolean;
   onClick: (row: T) => void;
 }
 
-export type TableColumn = TextColumn | MonetaryColumn | BooleanColumn | ActionsColumn;
+export interface DateColumn extends BaseColumn {
+  type: 'date';
+  accessor: string;
+}
+
+export type TableColumn = TextColumn | MonetaryColumn | BooleanColumn | ActionsColumn | DateColumn;

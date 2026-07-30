@@ -16,7 +16,6 @@ import {
   styleUrls: ['./table.component.scss'],
 })
 export class TableComponent {
-
   @Input({ required: true }) columns: TableColumn[] = [];
 
   private _data = signal<any[]>([]);
@@ -43,8 +42,10 @@ export class TableComponent {
       const val = filters[key]?.toLowerCase().trim();
       if (!val) continue;
 
-      result = result.filter(row =>
-        String(row[key] ?? '').toLowerCase().includes(val)
+      result = result.filter((row) =>
+        String(row[key] ?? '')
+          .toLowerCase()
+          .includes(val),
       );
     }
 
@@ -65,12 +66,10 @@ export class TableComponent {
     return this.filteredData().slice(start, start + this.pageSize());
   });
 
-  totalPages = computed(() =>
-    Math.ceil(this.filteredData().length / this.pageSize())
-  );
+  totalPages = computed(() => Math.ceil(this.filteredData().length / this.pageSize()));
 
   onFilterChange(accessor: string, value: string) {
-    this.filters.update(f => ({ ...f, [accessor]: value }));
+    this.filters.update((f) => ({ ...f, [accessor]: value }));
     this.currentPage.set(0);
   }
 
@@ -78,7 +77,7 @@ export class TableComponent {
     if (!accessor) return;
 
     if (this.sortColumn() === accessor) {
-      this.sortAsc.update(v => !v);
+      this.sortAsc.update((v) => !v);
     } else {
       this.sortColumn.set(accessor);
       this.sortAsc.set(true);
@@ -96,7 +95,7 @@ export class TableComponent {
   }
 
   toggleFooter(accessor: string) {
-    this.showFooterFor.update(f => ({
+    this.showFooterFor.update((f) => ({
       ...f,
       [accessor]: !f[accessor],
     }));
@@ -125,10 +124,29 @@ export class TableComponent {
     return value ? 'Sí' : 'No';
   }
 
+  formatDate(value: string) {
+    if (!value) return 'Sin devolución';
+
+    return new Date(value).toLocaleDateString('es-CO');
+  }
+
+  formatStatus(status: string) {
+    switch (status) {
+      case 'Active':
+        return 'Activo';
+
+      case 'Returned':
+        return 'Devuelto';
+
+      case 'Overdue':
+        return 'Vencido';
+
+      default:
+        return status;
+    }
+  }
+
   getFooterSum(accessor: string): number {
-    return this.filteredData().reduce(
-      (sum, row) => sum + (row[accessor] ?? 0),
-      0
-    );
+    return this.filteredData().reduce((sum, row) => sum + (row[accessor] ?? 0), 0);
   }
 }

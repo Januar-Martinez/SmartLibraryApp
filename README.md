@@ -1,4 +1,13 @@
 # SmartLibraryApp
+Sistema de gestión hotelera desarrollado con **Angular 17+** (frontend)
+
+## 📸 Algunas Capturas
+![Inicio](./src/assets/Inicio.png)
+![Miembros](./src/assets/Miembros.png)
+![Actualizar](./src/assets/Editar.png)
+![Libros](./src/assets/Libros.png)
+![Prestamos](./src/assets/prestamos.png)
+![Devolver](./src/assets/devolver.png)
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.8.
 

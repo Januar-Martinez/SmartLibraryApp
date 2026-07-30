@@ -43,7 +43,11 @@
             @for (col of columns; track col.label) {
               <td>
                 @if (col.type === 'text') {
-                  {{ row[col.accessor!] }}
+                  @if (col.accessor === 'status') {
+                    {{ formatStatus(row[col.accessor!]) }}
+                  } @else {
+                    {{ row[col.accessor!] }}
+                  }
                 }
 
                 @if (col.type === 'monetary') {
@@ -54,10 +58,18 @@
                   {{ formatBoolean(row[col.accessor!], asBoolean(col)) }}
                 }
 
+                @if (col.type === 'date') {
+                  {{ formatDate(row[col.accessor!]) }}
+                }
+
                 @if (col.type === 'actions') {
                   <div class="actions-cell">
                     @for (a of asActions(col).actions; track a.icon) {
-                      <button class="action-btn" (click)="a.onClick(row)">
+                      <button
+                        class="action-btn"
+                        [disabled]="a.disabled?.(row)"
+                        (click)="a.onClick(row)"
+                      >
                         <i [class]="a.icon"></i>
                       </button>
                     }

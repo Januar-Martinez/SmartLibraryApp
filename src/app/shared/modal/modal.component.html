@@ -26,6 +26,7 @@
                   [placeholder]="field.label"
                   [(ngModel)]="formData[field.key]"
                   (input)="onTextInput(field, $event)"
+                  [readonly]="field.readonly"
                 />
               }
 

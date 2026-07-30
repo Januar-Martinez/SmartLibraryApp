@@ -12,6 +12,7 @@ interface BaseField {
   icon?: string;
   required?: boolean;
   visible?: boolean;
+  readonly?: boolean;
 }
 
 export interface TextField extends BaseField {
